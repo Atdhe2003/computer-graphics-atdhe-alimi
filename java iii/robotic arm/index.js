@@ -76,26 +76,39 @@ wrist.add(palm);
 
 const fingers = [];
 
-const fingerGeometry = new THREE.BoxGeometry(0.25, 1, 0.25);
+const fingerHeights = [0.9, 1.2, 1.05, 0.7];
+const fingerWidths = [0.22, 0.26, 0.22, 0.16];
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 4; i++) {
 
     const fingerJoint = new THREE.Group();
 
-    fingerJoint.position.x = -0.7 + i * 0.35;
+    fingerJoint.position.x = -0.42 + i * 0.42;
     fingerJoint.position.y = 0.75;
 
     palm.add(fingerJoint);
 
 
-    const finger = new THREE.Mesh(fingerGeometry, fingerMaterial);
+    const finger = new THREE.Mesh(
+        new THREE.BoxGeometry(fingerWidths[i], fingerHeights[i], fingerWidths[i]),
+        fingerMaterial
+    );
 
-
-    finger.position.y = 0.5;
+    finger.position.y = fingerHeights[i] / 2;
     fingerJoint.add(finger);
 
     fingers.push(fingerJoint);
 }
+
+
+const thumb = new THREE.Group();
+thumb.position.set(-1.05, 0.05, 0.12);
+thumb.rotation.z = 1.15;
+palm.add(thumb);
+
+const thumbMesh = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.75, 0.3), fingerMaterial);
+thumbMesh.position.y = 0.38;
+thumb.add(thumbMesh);
 
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -185,6 +198,26 @@ window.addEventListener('keydown', function(event) {
 
     if (key === 'd') {
         wrist.rotation.z -= rotationStep;
+    }
+
+    if (key === 'r') {
+        for (let i = 0; i < fingers.length; i++) {
+            fingers[i].rotation.x += rotationStep;
+        }
+    }
+
+    if (key === 'f') {
+        for (let i = 0; i < fingers.length; i++) {
+            fingers[i].rotation.x -= rotationStep;
+        }
+    }
+
+    if (key === 't') {
+        thumb.rotation.x += rotationStep;
+    }
+
+    if (key === 'g') {
+        thumb.rotation.x -= rotationStep;
     }
 
 });
